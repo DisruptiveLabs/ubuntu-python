@@ -1,10 +1,13 @@
 FROM ubuntu:14.04
 MAINTAINER Franklyn Tackitt <frank@comanage.com>
 
-RUN echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache
+COPY ./pgdg-key.asc /tmp/pgdg-key.asc
+COPY ./wkhtmltox-0.12.2-dev-cf53180_linux-trusty-amd64.deb /tmp/wkhtmltox.deb
 
-ADD ./wkhtmltox-0.12.2-dev-cf53180_linux-trusty-amd64.deb /tmp/wkhtmltox.deb
-RUN apt-get update && \
+RUN echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache && \
+    echo deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main >> /etc/apt/sources.list.d/pgdg.list && \
+    apt-key add /tmp/pgdg-key.asc && \
+    apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
 # Development files
@@ -29,10 +32,10 @@ RUN apt-get update && \
       libxrender1 \
       libffi-dev \
 # Useful tools
-      postgresql-client \
+      postgresql-client-9.4 \
       curl && \
     apt-get clean && \
-    easy_install -U pip>=7.0.0 && \
+    easy_install -U pip && \
 # wkhtmltopdf-static, since we need the static version
     dpkg -i /tmp/wkhtmltox.deb && \
 # Just install this now, since its a big build
