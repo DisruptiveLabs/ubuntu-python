@@ -1,12 +1,13 @@
-FROM ubuntu:14.04
+FROM ubuntu:15.04
 MAINTAINER Franklyn Tackitt <frank@comanage.com>
 
-COPY ./pgdg-key.asc /tmp/pgdg-key.asc
+#COPY ./pgdg-key.asc /tmp/pgdg-key.asc
 COPY ./wkhtmltox-0.12.2-dev-cf53180_linux-trusty-amd64.deb /tmp/wkhtmltox.deb
 
 RUN echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache && \
-    echo deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main >> /etc/apt/sources.list.d/pgdg.list && \
-    apt-key add /tmp/pgdg-key.asc && \
+# PostgreSQL PGDG repository support, uncomment if you need it
+#    echo deb http://apt.postgresql.org/pub/repos/apt/ utopic-pgdg main >> /etc/apt/sources.list.d/pgdg.list && \
+#    apt-key add /tmp/pgdg-key.asc && \
     apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
@@ -23,6 +24,8 @@ RUN echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache && \
       uwsgi-plugin-python \
 # Supervisor to manage the uwsgi instance
       supervisor \
+# Nginx for wsgi socket handling
+      nginx \
 # Libraries
       libpq-dev \
       fontconfig \
