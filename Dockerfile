@@ -36,6 +36,7 @@ RUN echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache && \
       libffi-dev \
 # Useful tools
       postgresql-client-9.4 \
+      gnupg \
       curl && \
     apt-get clean && \
     easy_install -U pip && \
